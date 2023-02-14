@@ -9,7 +9,7 @@ B_array(end) = 1;
 
 
 
-figure;
+
 
 % PA model
 A = A_array(end);
@@ -20,13 +20,17 @@ beta = 0.68;
 PA_saleh = @(r) (A*r)./(1 + B*(r.^2));
 PA_saleh_phase = @(r) (alpha*(r.^2))./(1 + beta*(r.^2));
 
-
+#a1 = 0.3; a2 = 0.6; a3 = 0.2;
+#PA_saleh_phase = @(r) a1*(r.^2) + a2*(r.^3) - a3*(r.^5);
 
 
 x = linspace(-1, 1, 100);
 
 figure;
 plot(x, PA_saleh_phase(x));
+
+
+#return;
 
 am_array = PA_saleh(x);
 pm_array = PA_saleh_phase(x);
@@ -47,6 +51,7 @@ PA_model_Theta = inv(H'*H)*H'*y;
 
 model = zeros(1, length(x));
 
+figure;
 for j = 1:PA_model_order + 1
   # На каждой итерации возрастает степень полинома
   # Все выходные значения для текущего полинома вычисляются одновременно
@@ -161,7 +166,7 @@ fft_size = 1024;
 interpolated_size = fft_size*20;
 sig_ofdm = zeros(1, fft_size);
 sc_num = fft_size - guards*2;
-sig2 = qammod(randint(1, sc_num, [0, 15]), 16);
+sig2 = qammod(randint(1, sc_num, [0, 63]), 64);
 
 sig_ofdm(guards + 1:fft_size/2) = sig2(1:sc_num/2);
 sig_ofdm(fft_size/2 + 1) = complex(0, 0);
@@ -173,18 +178,34 @@ sig_ofdm_shifted = [sig_ofdm_shifted(1:fft_size/2), complex(zeros(1, interpolate
 
 sig_ofdm_shifted_time = ifft(sig_ofdm_shifted);
 
-
+scatterplot(fft(sig_ofdm_shifted_time))
 #####
+i = sqrt(-1);
 
-##gg = abs(sig_ofdm_shifted);
-##gg = gg./max(gg);
-##am_array = PA_saleh(gg);
-##pm_array = PA_saleh_phase(gg);
-##saleh_result = am_array.*(exp(i*pm_array));
-##
-##
-##scatterplot(fft(saleh_result));
 
+figure;
+for p = 0.1:0.01:0.99
+
+  gg = abs(sig_ofdm_shifted);
+  angles = angle(sig_ofdm_shifted);
+  gg = (gg./max(gg))*p;
+  max(gg)
+  am_array = PA_saleh(_apply_polynomial(DPD_Theta,gg));
+  pm_array = PA_saleh_phase(gg);
+  max(pm_array)
+  saleh_result = am_array.*(exp(i*(pm_array + angles))); #
+  ##
+  ##
+
+  kk = scatter(real(saleh_result), imag(saleh_result), 'filled');
+  grid on;
+  xlim([-1, 1]);
+  ylim([-1, 1]);
+  pause(0.01);
+  clear kk;
+end
+
+return;
 ###
 
 
