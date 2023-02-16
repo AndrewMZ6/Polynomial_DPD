@@ -1,4 +1,5 @@
 close all; clearvars; clc;
+pkg load communications;
 
 
 % PA model
@@ -7,8 +8,8 @@ B = 1;
 alpha = 0.37;
 beta = 0.68;
 
-PA_saleh = @(r) ((A*r)./(1 + B*(r.^2)))./0.6;
-PA_saleh_phase = @(r) ((alpha*(r.^2))./(1 + beta*(r.^2)));
+PA_saleh = @(r) (A*r)./(1 + B*(r.^2));
+PA_saleh_phase = @(r) (alpha*(r.^2))./(1 + beta*(r.^2));
 
 
 x = linspace(-1, 1, 100);
@@ -34,7 +35,7 @@ figure;
 upperlim = 1;
 z = zeros(1, length(x));
 z2 = zeros(1, length(x));
-pause(3);
+
 for p = 0.1:0.01:upperlim
   iter_sig = sig*p;
 

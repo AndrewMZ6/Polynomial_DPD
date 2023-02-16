@@ -205,6 +205,10 @@ for p = 0.1:0.01:0.99
   clear kk;
 end
 
+
+figure;
+plot((pm_array + angles)./angles);
+
 return;
 ###
 
