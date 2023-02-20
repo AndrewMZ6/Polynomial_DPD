@@ -4,7 +4,7 @@ function output_signal = saleh_PA(input_signal)
   alpha = 0.37;
   beta = 0.68;
 
-  saleh_AM = @(r) ((A*r)./(1 + B*(r.^2)));
+  saleh_AM = @(r) ((A*r)./(1 + B*(r.^2)))./0.6;
   saleh_PH = @(r) (alpha*(r.^2))./(1 + beta*(r.^2));
 
   initial_phases = angle(input_signal);
