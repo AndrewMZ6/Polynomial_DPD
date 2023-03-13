@@ -14,41 +14,6 @@ input_values = round2(input_values, n);
 k = 11.489;
 
 
-
-## Create test signal. Sum of two sinusoids
-fs = 1000;
-N = 1000;
-sin_amplitude = 0.4;
-fc = 10;
-fc2 = 25;
-
-
-t = 0:1/fs:(N-1)/fs;
-sig = sin(2*pi*fc*t);
-sig2 = sin(2*pi*fc2*t);
-
-
-sig3 = sig + sig2;
-sig3 = sig3/max(sig3);
-sig3 = sig3*sin_amplitude;
-
-
-figure;
-semilogy(abs(fft(amplifier_model(sig3)))); hold on;
-semilogy(abs(fft(k*(sig3)))); hold off;
-title('amplifier vs k multiplication (log scale)');
-legend('amplifier', 'k multiplication');
-grid on;
-
-
-figure;
-plot(abs(fft(amplifier_model(sig3)))); hold on;
-plot(abs(fft(k*(sig3)))); hold off;
-title('amplifier vs k multiplication (linear scale)');
-legend('amplifier', 'k multiplication');
-grid on;
-
-
 er = 0.00001;
 d = 0.1;
 
@@ -115,63 +80,6 @@ figure;
 plot(input_values, dpd_values);
 
 
-
-
-
-
-dpd_sig = zeros(1, length(sig3));
-
-for i = 1:length(dpd_sig)
-    temp = round2(sig3(i), n);
-    if (!temp)
-      dpd_sig(i) = 0;
-      disp(['Filling dpd_values. Iteration ', num2str(i), ' ZERO']);
-    else
-      dpd_sig(i) = M(temp);
-      disp(['Filling dpd_sig. Iteration ', num2str(i)]);
-    endif
-endfor
-
-
-figure;
-plot(sig3); hold on;
-plot(dpd_sig); hold off;
-grid on;
-
-
-figure;
-plot(amplifier_model(sig3)); hold on;
-plot(amplifier_model(dpd_sig)); hold off;
-grid on;
-
-
-figure;
-plot((abs(fft(amplifier_model(sig3))))); hold on;
-plot((abs(fft(amplifier_model(dpd_sig)))), 'red'); hold off;
-grid on;
-
-
-bla1 = abs(fft(amplifier_model(sig3)));
-m = min(bla1);
-bla = abs(fft(amplifier_model(dpd_sig)));
-
-
-zer = find(bla == 0);
-bla(zer) = m;
-
-
-figure;
-plot(10*log10(bla1), 'LineWidth', 1.5); hold on;
-plot(10*log10(bla), 'LineWidth', 2);
-plot(10*log10(abs(fft(k*(sig3)))), 'LineWidth', 2.5);hold off;
-grid on;
-
-
-figure;
-plot(amplifier_model(sig3)  ); hold on;
-plot(amplifier_model(dpd_sig));
-plot(k*(sig3));hold off;
-grid on;
 
 
 # OFDM symbol check
