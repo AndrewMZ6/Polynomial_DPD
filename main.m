@@ -9,7 +9,7 @@ B_array(end) = 1;
 
 
 
-figure;
+figure(1);
 
 % PA model
 A = A_array(end);
@@ -25,7 +25,7 @@ PA_saleh_phase = @(r) (alpha*(r.^2))./(1 + beta*(r.^2));
 
 x = linspace(-1, 1, 100);
 
-figure;
+figure(2);
 plot(x, PA_saleh_phase(x));
 
 am_array = PA_saleh(x);
@@ -77,7 +77,7 @@ end
 
 DPD_Theta = inv(newH'*newH)*newH'*newy';
 
-figure;
+figure(3);
 
 invmodel = zeros(1, length(newx));
 
@@ -115,13 +115,13 @@ after_PA_model = _apply_polynomial(PA_model_Theta, sig);
 after_PA_model_with_DPD = _apply_polynomial(PA_model_Theta, _apply_polynomial(DPD_Theta, sig));
 
 
-figure;
+figure(4);
 plot(tsin, after_PA_model, tsin, after_PA_model_with_DPD);
 grid on;
 legend('without DPD', 'with DPD');
 
 
-figure;
+figure(5);
 plot(abs(fft(after_PA_model)), 'LineWidth', 2); hold on;
 plot(abs(fft(after_PA_model_with_DPD)), 'LineWidth', 2.5); hold off;
 legend('without DPD', 'with DPD');
@@ -130,22 +130,42 @@ grid on;
 
 
 
-figure;
+figure(6);
 
-plot(x, _apply_polynomial(PA_model_Theta, x), 'LineWidth', 2); hold on;
-plot(newx, _apply_polynomial(DPD_Theta, newx), 'LineWidth', 2); hold on;
-plot(x, _apply_polynomial(PA_model_Theta, _apply_polynomial(DPD_Theta, x)), 'LineWidth', 2); hold off;
-xlim([-1, 1]);
-ylim([-1, 1]);
-grid on;
-legend('PA AM-AM', 'DPD AM-AM', 'PA + DPD AM-AM');
+  plot(x, _apply_polynomial(PA_model_Theta, x), 'k', 'LineWidth', 2, 'LineStyle', '-.'); hold on;
+  plot(newx, _apply_polynomial(DPD_Theta, newx), 'k', 'LineWidth', 2, 'LineStyle', ':'); hold on;
+  plot(x, _apply_polynomial(PA_model_Theta, _apply_polynomial(DPD_Theta, x)), 'k', 'LineWidth', 2); hold off;
+  xlim([-1, 1]);
+  ylim([-1, 1]);
+  grid on;
+  xlabel('Input signal');
+  ylabel('Output signal');
+  legend('PA model', 'DPD model', 'PA + DPD model', 'location', 'northwest');
+
+figure(7);
+  plot(x, _apply_polynomial(PA_model_Theta, x), 'k', 'LineWidth', 2, 'LineStyle', '-.');
+  xlim([-1, 1]);
+  ylim([-1, 1]);
+  grid on;
+  xlabel('Input signal');
+  ylabel('Output signal');
+  legend('Polynomial PA model', 'location', 'northwest');
+
+figure(8);
+  plot(newx, _apply_polynomial(DPD_Theta, newx), 'k', 'LineWidth', 2, 'LineStyle', ':');
+  xlim([-1, 1]);
+  ylim([-1, 1]);
+  grid on;
+  xlabel('Input signal');
+  ylabel('Output signal');
+  legend('Inverse PA polynomial', 'location', 'northwest');
 
 
 
-figure;
-plot(x, PA_saleh(_apply_polynomial(DPD_Theta,x)));
-grid on;
-title('DPD + PA AM-AM');
+figure(9);
+  plot(x, PA_saleh(_apply_polynomial(DPD_Theta,x)));
+  grid on;
+  title('DPD + PA AM-AM');
 
 
 
@@ -206,17 +226,19 @@ rf_sig_ofdm = rf_sig_ofdm*k*A;
 max(abs(rf_sig_ofdm))
 
 
-figure;
+figure(10);
 plot(rf_sig_ofdm);
 
 
 after_PA_model = _apply_polynomial(PA_model_Theta, rf_sig_ofdm);
 after_PA_model_with_DPD = _apply_polynomial(PA_model_Theta, _apply_polynomial(DPD_Theta, rf_sig_ofdm));
 
-figure;
-plot(freqline, 10*log10(abs(fft(after_PA_model)))); hold on;
-plot(freqline, 10*log10(abs(fft(after_PA_model_with_DPD))));
-title('DPD + polynomial');
+figure(11);
+plot(freqline*1e-6, 10*log10(abs(fft(after_PA_model))), 'k', 'LineStyle', ':'); hold on;
+plot(freqline*1e-6, 10*log10(abs(fft(after_PA_model_with_DPD))), 'k'); hold off;
+legend('without DPD', 'with DPD', 'location', 'northwest');
+ylabel('Power, dB');
+xlabel('Frequency, MHz');
 grid on;
 
 scatterplot(fft(after_PA_model));
@@ -227,7 +249,7 @@ after_saleh_model = PA_saleh(rf_sig_ofdm);
 after_saleh_model_with_DPD = PA_saleh(_apply_polynomial(DPD_Theta, rf_sig_ofdm));
 
 
-figure;
+figure(12);
 plot(freqline, 10*log10(abs(fft(after_saleh_model)))); hold on;
 plot(freqline, 10*log10(abs(fft(after_saleh_model_with_DPD))));
 title('DPD + saleh');
