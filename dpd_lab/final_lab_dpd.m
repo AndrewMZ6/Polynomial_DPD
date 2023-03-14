@@ -73,6 +73,8 @@ rf_sig_ofdm = generate_normalized_ofdm();
 rf_sig_ofdm = rf_sig_ofdm*0.316;
 
 
+# This is comment line from Polynomial DPD repo
+
 amplified_rf_sig_ofdm = amplifier_model(rf_sig_ofdm);
 
 for i = 1:length(rf_sig_ofdm)
