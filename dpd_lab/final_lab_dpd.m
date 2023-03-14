@@ -59,6 +59,15 @@ for i = 1:length(input_values)
 endfor
 
 
+dpd_values = zeros(1, length(input_values));
+
+for i = 1:length(input_values)
+    dpd_values(i) = M(input_values(i));
+    disp(['Filling dpd_values. Iteration ', num2str(i)]);
+endfor
+
+plot(input_values, amplifier_model(dpd_values));
+
 
 rf_sig_ofdm = generate_normalized_ofdm();
 rf_sig_ofdm = rf_sig_ofdm*0.316;
