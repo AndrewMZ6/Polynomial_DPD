@@ -74,6 +74,7 @@ rf_sig_ofdm = rf_sig_ofdm*0.316;
 
 
 # This is comment line from Polynomial DPD repo
+# newGit COMMENT! 
 
 amplified_rf_sig_ofdm = amplifier_model(rf_sig_ofdm);
 
